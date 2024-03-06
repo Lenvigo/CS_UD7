@@ -36,7 +36,10 @@ function login(event) {
       console.log(response);
       if (response.userId && response.email) {
         toggleLoginMain(response.email);
+        //1. Crea  una variable global de javascript userId y almacena en ella  el userId que se recibe cuando se ha logrado un login exitoso en la parte cliente. Si no, su valor debe ser null.
         userId = response.userId;
+        //comprobacion
+        console.log(userId);
       } else {
         console.error("La autenticación ha fallado");
         showErrorLogin("La autenticación ha fallado", true, "errorLogin");
