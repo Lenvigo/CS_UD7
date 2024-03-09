@@ -1,6 +1,7 @@
 <?php
 
-class UsuarioServicio {
+class UsuarioServicio
+{
 
     const USER_DOES_NOT_EXIST = "No existe usuario";
     const PWD_INCORRECT = "La contraseña no es correcta";
@@ -8,14 +9,16 @@ class UsuarioServicio {
     private IUsuarioRepository $userRepository;
     private IRolRepository $rolRepository;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->userRepository = new UsuarioRepository();
         $this->rolRepository = new RolRepository();
     }
 
     /* Get all notes */
 
-    public function getUsuarios(): array {
+    public function getUsuarios(): array
+    {
 
         $usuarios = $this->userRepository->findAll();
         foreach ($usuarios as $usuario) {
@@ -27,7 +30,8 @@ class UsuarioServicio {
     }
 
     //a) iniciar sesión utilizando password_hash() y password_verify() con BCRYPT y parámetros por defecto (1 punto)
-    public function login(string $user, string $pwd, $rolId): ?Usuario {
+    public function login(string $user, string $pwd, $rolId): ?Usuario
+    {
 
         $userResult = $this->userRepository->getUsuarioByEmail($user);
 
@@ -48,14 +52,16 @@ class UsuarioServicio {
         return null;
     }
 
-    public function getRoles(): array {
+    public function getRoles(): array
+    {
 
         $roles = $this->rolRepository->findAll();
 
         return $roles;
     }
 
-    public function getRoleById(int $roleId): Rol {
+    public function getRoleById(int $roleId): Rol
+    {
 
         $roles = $this->rolRepository->findAll();
         foreach ($roles as $rol) {
@@ -68,7 +74,8 @@ class UsuarioServicio {
         return null;
     }
 
-    public function isUserInRole(Usuario $usuario, int $roleId): bool {
+    public function isUserInRole(Usuario $usuario, int $roleId): bool
+    {
         $rolesArray = $usuario->getRoles();
         foreach ($rolesArray as $rol) {
             if ($rol->getId() === $roleId) {
@@ -79,7 +86,8 @@ class UsuarioServicio {
         return false;
     }
 
-    public function isUserInRoleName(Usuario $usuario, string $roleName): bool {
+    public function isUserInRoleName(Usuario $usuario, string $roleName): bool
+    {
         $rolesArray = $usuario->getRoles();
         foreach ($rolesArray as $rol) {
             if ($rol->getName() === $roleName) {
@@ -90,7 +98,8 @@ class UsuarioServicio {
         return false;
     }
 
-    public function register($email, $pwd1, $pwd2) {
+    public function register($email, $pwd1, $pwd2)
+    {
         $usuario = null;
         $error = "";
         $exito = false;
@@ -117,7 +126,7 @@ class UsuarioServicio {
 
                     $rol = $this->rolRepository->findRolByName(USER_ROLE);
 
-                    $exito = $exito && ($rol != null );
+                    $exito = $exito && ($rol != null);
 
                     if ($rol != null) {
                         $exito = $exito && $this->userRepository->addRoleToUser($usuario->getId(), $rol->getId());
@@ -149,6 +158,8 @@ class UsuarioServicio {
         return $usuario;
     }
 
+    public function logout()
+    {
+        SessionManager::cerrarSesion();
+    }
 }
-
-?>

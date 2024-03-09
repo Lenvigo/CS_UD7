@@ -36,7 +36,6 @@ function login(event) {
       console.log(response);
       if (response.userId && response.email) {
         toggleLoginMain(response.email);
-        //1. Crea  una variable global de javascript userId y almacena en ella  el userId que se recibe cuando se ha logrado un login exitoso en la parte cliente. Si no, su valor debe ser null.
         userId = response.userId;
         //comprobacion
         console.log(userId);
@@ -98,5 +97,59 @@ function showErrorLogin(msg, show, html_id) {
   } else {
     divError.innerHTML = "";
     divError.classList.add("d-none");
+  }
+}
+
+// Función que muestra un modal de confirmación para el cierre de sesión
+function confirmLogout(event) {
+  // Prevenir la acción predeterminada del evento (en este caso, evitar que se envíe el formulario)
+  event.preventDefault();
+
+  // Mostrar el modal de confirmación con la función showModal
+  showModal("spa_modal", "Confirmación cierre de sesión", "¿Está seguro/a de que desea cerrar sesión?", null,
+      null, logoutCliente, null);
+}
+
+// Funcion cierre sesión de usuario
+function logoutCliente() {
+  // Verificar si userId no es nulo ni indefinido
+  if (userId != null && userId != undefined) {
+      // Construir la URL del logout en el servidor
+      const logout_url = "?controller=Usuario&action=logout";
+
+      // Construir el objeto de datos a enviar al servidor
+      const data = { 'userId': userId };
+
+      // Crear una nueva solicitud fetch con el método POST
+      const request = new Request(base_url + logout_url, {
+          method: "POST",
+          body: JSON.stringify(data)
+      });
+
+      // Realizar la solicitud fetch al servidor
+      fetch(request)
+          .then((response) => {
+              // Convertir la respuesta a formato JSON
+              return response.json();
+          })
+          .then((response) => {
+              // Mostrar la respuesta en la consola del navegador
+              console.log(response);
+
+              // Actualizar la variable userId a null
+              userId = null;
+
+              // Alternar entre la vista de inicio de sesión y la principal
+              toggleLoginMain('');
+
+              // Mostrar un mensaje de error si la respuesta contiene un error
+              if (response.error != false) {
+                  showErrorLogin('¡Algo salió mal! Cerrando sesión de todos modos...', true, "errorLogin");
+              }
+          })
+          .catch((error) => {
+              // Mostrar un mensaje de error en la consola del navegador
+              console.error('Ha ocurrido un error al cerrar sesión' + error);
+          });
   }
 }

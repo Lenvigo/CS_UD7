@@ -45,6 +45,7 @@ class UsuarioController
                 //401 Unauthorized
                 http_response_code(401);
                 $response["error"] = true;
+
                 return json_encode($response);
             } else {
 
@@ -57,6 +58,7 @@ class UsuarioController
 
                 $response["userId"] = $userResult->getId();
                 $response["email"] = $userResult->getEmail();
+
                 return json_encode($response);
             }
         } else {
@@ -66,8 +68,6 @@ class UsuarioController
             return json_encode($response);
         }
     }
-
-
 
     public function register()
     {
@@ -89,6 +89,35 @@ class UsuarioController
         return json_encode($app_roles);
     }
 
-}
+    public function logout()
+    {
+         // Lee el contenido de la solicitud HTTP actual como JSON desde php://input
+        $data = json_decode(file_get_contents("php://input"), true);
 
-?>
+         // Verificamos si la clave "userId" está en $data   y logica errores
+        if (isset($data["userId"])) {
+    
+            $userId = $data["userId"];
+
+            if ($userId == $_SESSION["userId"]) {
+                $response["error"] = false;
+                http_response_code(200);
+
+            } else {
+                $response["error"] = "Authenticated user does not match logging out user. Logging out anyway";
+                http_response_code(400);
+            }
+            
+        } else {
+
+            $response["error"] = true;
+            http_response_code(400);
+        }
+        // cierre sesion
+        $this->usuarioServicio->logout();
+
+        $response = json_encode($response);
+        return $response;
+    }
+
+}
