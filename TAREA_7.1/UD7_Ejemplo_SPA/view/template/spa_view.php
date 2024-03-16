@@ -22,7 +22,9 @@
                     <p class="lead">¡Hola <span class='d-none' id='email_header'></span>!</p>
                 </div>
 
-                <form method="post" class="d-flex mx-2 align-items-center justify-content-start">
+
+                // Correccion : Falta el id del elemento <form> Uncaught TypeError: document.querySelector(...) is null onceLoaded http://localhost:3000/Elena/Tarea7.1_CS/js/global.js:15
+                <form method="post" class="d-flex mx-2 align-items-center justify-content-start" id="formLogout">
                     <input type="submit" class="btn btn-primary btn-block" value="Cerrar sesión" name="btnCerrar" id="btnCerrar"></button>
                 </form>
             </div>
