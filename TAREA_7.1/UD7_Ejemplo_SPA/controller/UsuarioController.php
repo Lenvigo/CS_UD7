@@ -93,7 +93,7 @@ class UsuarioController
     {
          // Lee el contenido de la solicitud HTTP actual como JSON desde php://input
         $data = json_decode(file_get_contents("php://input"), true);
-
+//Coreccion: llamar a session_start() o SessionManager::iniciarSesion();
          // Verificamos si la clave "userId" está en $data   y logica errores
         if (isset($data["userId"])) {
     
@@ -118,6 +118,12 @@ class UsuarioController
 
         $response = json_encode($response);
         return $response;
+
+        //otro cierre de sesion:
+        /*
+        SessionManager::cerrarSesion();
+        return json_encode($response);
+        */
     }
 
 }
